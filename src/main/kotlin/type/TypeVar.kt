@@ -1,5 +1,7 @@
 package dk.maxkandersen.type
 
+import dk.maxkandersen.constraint.Substitution
+
 data class TypeVar(
     val sym: String
 ) : Type {
@@ -16,5 +18,13 @@ data class TypeVar(
 
     override fun toString(): String {
         return sym
+    }
+
+    override fun substitute(substitution: Substitution): Type {
+        return substitution[this] ?: return this
+    }
+
+    override fun includes(typeVar: TypeVar): Boolean {
+        return this == typeVar
     }
 }
