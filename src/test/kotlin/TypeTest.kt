@@ -1,6 +1,7 @@
 import dk.maxkandersen.type.BoolType
 import dk.maxkandersen.type.FunctionType
 import dk.maxkandersen.type.IntType
+import dk.maxkandersen.type.PairType
 import dk.maxkandersen.type.QuantifyingTypeScheme
 import dk.maxkandersen.type.TypeVar
 import kotlin.test.*
@@ -38,6 +39,14 @@ class TypeTest {
         val b = TypeVar("b")
         val funtyp = FunctionType(a, b)
         assertEquals("a -> b", funtyp.toString())
+    }
+
+    @Test
+    fun pairTypeHasCorrectString() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val pair = PairType(a, b)
+        assertEquals("a x b", pair.toString())
     }
 
     @Test
@@ -85,6 +94,24 @@ class TypeTest {
         val funtyp1 = FunctionType(a, b)
         val funtyp2 = FunctionType(b, a)
         assertNotEquals(funtyp1, funtyp2)
+    }
+
+    @Test
+    fun equalPairTypesAreEqual() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val pair1 = PairType(a, b)
+        val pair2 = PairType(a, b)
+        assertEquals(pair1, pair2)
+    }
+
+    @Test
+    fun unequalPairTypesAreNotEqual() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val pair1 = PairType(a, b)
+        val pair2 = PairType(b, a)
+        assertNotEquals(pair1, pair2)
     }
 
     @Test
