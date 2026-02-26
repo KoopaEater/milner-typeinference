@@ -1,16 +1,13 @@
-package dk.maxkandersen.constraint
+package dk.maxkandersen.unification
 
 import dk.maxkandersen.type.FunctionType
 import dk.maxkandersen.type.PairType
 import dk.maxkandersen.type.Type
 import dk.maxkandersen.type.TypeVar
 
+data class Constraint(val left: Type, val right: Type) : Unifiable {
 
-class UnificationException(constraint: Constraint) : RuntimeException("Unification error: Could not unify $constraint")
-
-data class Constraint(val left: Type, val right: Type) {
-
-    fun unify(): Substitution {
+    override fun unify(): Substitution {
         return when {
             left == right -> emptySubstitution()
             left is TypeVar && !(right.includes(left)) -> substitutionOf(left to right)
@@ -33,3 +30,4 @@ data class Constraint(val left: Type, val right: Type) {
         return "$left = $right"
     }
 }
+

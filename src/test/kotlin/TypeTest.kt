@@ -14,8 +14,18 @@ class TypeTest {
     }
 
     @Test
+    fun boolTypeHasCorrectTermString() {
+        assertEquals("bool", BoolType.toTermString())
+    }
+
+    @Test
     fun intTypeHasCorrectString() {
         assertEquals("int", IntType.toString())
+    }
+
+    @Test
+    fun intTypeHasCorrectTermString() {
+        assertEquals("int", IntType.toTermString())
     }
 
     @Test
@@ -27,10 +37,25 @@ class TypeTest {
     }
 
     @Test
+    fun typeVarHasCorrectTermString() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        assertEquals("a", a.toTermString())
+        assertEquals("b", b.toTermString())
+    }
+
+    @Test
     fun freshTypeVarHasCorrectString() {
         val a = TypeVar()
         val b = TypeVar()
         assertNotEquals(a.toString(), b.toString())
+    }
+
+    @Test
+    fun freshTypeVarHasCorrectTermString() {
+        val a = TypeVar()
+        val b = TypeVar()
+        assertNotEquals(a.toTermString(), b.toTermString())
     }
 
     @Test
@@ -42,11 +67,27 @@ class TypeTest {
     }
 
     @Test
+    fun functionTypeHasCorrectTermString() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val funtyp = FunctionType(a, b)
+        assertEquals("f(a,b)", funtyp.toTermString())
+    }
+
+    @Test
     fun pairTypeHasCorrectString() {
         val a = TypeVar("a")
         val b = TypeVar("b")
         val pair = PairType(a, b)
         assertEquals("a x b", pair.toString())
+    }
+
+    @Test
+    fun pairTypeHasCorrectTermString() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val pair = PairType(a, b)
+        assertEquals("p(a,b)", pair.toTermString())
     }
 
     @Test
@@ -130,5 +171,73 @@ class TypeTest {
         val typescheme1 = QuantifyingTypeScheme(b, FunctionType(a, b))
         val typescheme2 = QuantifyingTypeScheme(a, FunctionType(b, a))
         assertNotEquals(typescheme1, typescheme2)
+    }
+
+    @Test
+    fun boolTypeHasCorrectSubPath() {
+        val subpaths = BoolType.getSubPaths()
+        assertTrue(subpaths.isEmpty())
+    }
+
+    @Test
+    fun intTypeHasCorrectSubPath() {
+        val subpaths = IntType.getSubPaths()
+        assertTrue(subpaths.isEmpty())
+    }
+
+    @Test
+    fun typeVarHasCorrectSubPath() {
+        val a = TypeVar("a")
+        val subpaths = a.getSubPaths()
+        assertTrue(subpaths.isEmpty())
+    }
+
+    @Test
+    fun funTypeHasCorrectSubPath() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val funtyp = FunctionType(a, b)
+        val subpaths = funtyp.getSubPaths()
+        assertEquals(listOf(listOf(0), listOf(1)), subpaths)
+    }
+
+    @Test
+    fun nestedFunTypeHasCorrectSubPath() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val c = TypeVar("c")
+        val funtyp = FunctionType(FunctionType(a, b), c)
+        val subpaths = funtyp.getSubPaths()
+        assertEquals(listOf(listOf(0), listOf(0, 0), listOf(0, 1), listOf(1)), subpaths)
+    }
+
+    @Test
+    fun pairTypeHasCorrectSubPath() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val pair = PairType(a, b)
+        val subpaths = pair.getSubPaths()
+        assertEquals(listOf(listOf(0), listOf(1)), subpaths)
+    }
+
+    @Test
+    fun nestedPairTypeHasCorrectSubPath() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val c = TypeVar("c")
+        val pair = PairType(PairType(a, b), c)
+        val subpaths = pair.getSubPaths()
+        assertEquals(listOf(listOf(0), listOf(0, 0), listOf(0, 1), listOf(1)), subpaths)
+    }
+
+    @Test
+    fun mixedNestedTypesHaveCorrectSubPath() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val c = TypeVar("c")
+        val d = TypeVar("d")
+        val funtyp = FunctionType(FunctionType(a, PairType(b, c)), d)
+        val subpaths = funtyp.getSubPaths()
+        assertEquals(listOf(listOf(0), listOf(0, 0), listOf(0, 1), listOf(0, 1, 0), listOf(0, 1, 1), listOf(1)), subpaths)
     }
 }

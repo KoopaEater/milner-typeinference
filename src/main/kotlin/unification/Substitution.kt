@@ -1,4 +1,4 @@
-package dk.maxkandersen.constraint
+package dk.maxkandersen.unification
 
 import dk.maxkandersen.type.Type
 import dk.maxkandersen.type.TypeVar
