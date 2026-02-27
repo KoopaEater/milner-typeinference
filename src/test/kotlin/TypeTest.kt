@@ -79,7 +79,7 @@ class TypeTest {
         val a = TypeVar("a")
         val b = TypeVar("b")
         val pair = PairType(a, b)
-        assertEquals("a x b", pair.toString())
+        assertEquals("(a x b)", pair.toString())
     }
 
     @Test
@@ -176,20 +176,20 @@ class TypeTest {
     @Test
     fun boolTypeHasCorrectSubPath() {
         val subpaths = BoolType.getSubPaths()
-        assertTrue(subpaths.isEmpty())
+        assertEquals(listOf(emptyList()), subpaths)
     }
 
     @Test
     fun intTypeHasCorrectSubPath() {
         val subpaths = IntType.getSubPaths()
-        assertTrue(subpaths.isEmpty())
+        assertEquals(listOf(emptyList()), subpaths)
     }
 
     @Test
     fun typeVarHasCorrectSubPath() {
         val a = TypeVar("a")
         val subpaths = a.getSubPaths()
-        assertTrue(subpaths.isEmpty())
+        assertEquals(listOf(emptyList()), subpaths)
     }
 
     @Test
@@ -198,7 +198,7 @@ class TypeTest {
         val b = TypeVar("b")
         val funtyp = FunctionType(a, b)
         val subpaths = funtyp.getSubPaths()
-        assertEquals(listOf(listOf(0), listOf(1)), subpaths)
+        assertEquals(listOf(emptyList(), listOf(0), listOf(1)), subpaths)
     }
 
     @Test
@@ -208,7 +208,7 @@ class TypeTest {
         val c = TypeVar("c")
         val funtyp = FunctionType(FunctionType(a, b), c)
         val subpaths = funtyp.getSubPaths()
-        assertEquals(listOf(listOf(0), listOf(0, 0), listOf(0, 1), listOf(1)), subpaths)
+        assertEquals(listOf(emptyList(), listOf(0), listOf(0, 0), listOf(0, 1), listOf(1)), subpaths)
     }
 
     @Test
@@ -217,7 +217,7 @@ class TypeTest {
         val b = TypeVar("b")
         val pair = PairType(a, b)
         val subpaths = pair.getSubPaths()
-        assertEquals(listOf(listOf(0), listOf(1)), subpaths)
+        assertEquals(listOf(emptyList(), listOf(0), listOf(1)), subpaths)
     }
 
     @Test
@@ -227,7 +227,7 @@ class TypeTest {
         val c = TypeVar("c")
         val pair = PairType(PairType(a, b), c)
         val subpaths = pair.getSubPaths()
-        assertEquals(listOf(listOf(0), listOf(0, 0), listOf(0, 1), listOf(1)), subpaths)
+        assertEquals(listOf(emptyList(), listOf(0), listOf(0, 0), listOf(0, 1), listOf(1)), subpaths)
     }
 
     @Test
@@ -238,6 +238,6 @@ class TypeTest {
         val d = TypeVar("d")
         val funtyp = FunctionType(FunctionType(a, PairType(b, c)), d)
         val subpaths = funtyp.getSubPaths()
-        assertEquals(listOf(listOf(0), listOf(0, 0), listOf(0, 1), listOf(0, 1, 0), listOf(0, 1, 1), listOf(1)), subpaths)
+        assertEquals(listOf(emptyList(), listOf(0), listOf(0, 0), listOf(0, 1), listOf(0, 1, 0), listOf(0, 1, 1), listOf(1)), subpaths)
     }
 }

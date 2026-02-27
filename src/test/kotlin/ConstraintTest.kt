@@ -1,5 +1,5 @@
 import dk.maxkandersen.unification.Constraint
-import dk.maxkandersen.unification.UnificationException
+import dk.maxkandersen.unification.ConstraintUnificationException
 import dk.maxkandersen.unification.substitutionOf
 import dk.maxkandersen.type.FunctionType
 import dk.maxkandersen.type.IntType
@@ -126,8 +126,8 @@ class ConstraintTest {
     fun unificationWithTypeVarInArbitraryFail() {
         val constraint1 = Constraint(a, funab)
         val constraint2 = Constraint(a, pairab)
-        assertFailsWith<UnificationException> { constraint1.unify() }
-        assertFailsWith<UnificationException> { constraint2.unify() }
+        assertFailsWith<ConstraintUnificationException> { constraint1.unify() }
+        assertFailsWith<ConstraintUnificationException> { constraint2.unify() }
     }
 
     @Test
@@ -135,9 +135,9 @@ class ConstraintTest {
         val constraint1 = Constraint(funab, IntType)
         val constraint2 = Constraint(IntType, pairab)
         val constraint3 = Constraint(funab, pairab)
-        assertFailsWith<UnificationException> { constraint1.unify() }
-        assertFailsWith<UnificationException> { constraint2.unify() }
-        assertFailsWith<UnificationException> { constraint3.unify() }
+        assertFailsWith<ConstraintUnificationException> { constraint1.unify() }
+        assertFailsWith<ConstraintUnificationException> { constraint2.unify() }
+        assertFailsWith<ConstraintUnificationException> { constraint3.unify() }
     }
 
 }

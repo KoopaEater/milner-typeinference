@@ -13,10 +13,11 @@ object BoolType : Type {
     }
 
     override fun getSubPaths(): List<DisagreementPath> {
-        return emptyList()
+        return listOf(emptyList())
     }
 
     override fun getSubtermAt(path: DisagreementPath): Type {
+        if (path.isEmpty()) return this
         throw IllegalArgumentException("Bool type has no subterms")
     }
 
@@ -30,5 +31,13 @@ object BoolType : Type {
 
     override fun includes(typeVar: TypeVar): Boolean {
         return false
+    }
+
+    override fun compareTo(other: Type): Int {
+        return when (other) {
+            is TypeVar -> 1
+            is BoolType -> 0
+            else -> -1
+        }
     }
 }

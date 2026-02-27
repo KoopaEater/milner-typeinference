@@ -10,12 +10,13 @@ interface NaryType : Type {
     }
 
     override fun getSubPaths(): List<DisagreementPath> {
-        return subtypes.withIndex().flatMap { (i, subtype) ->
-            listOf(listOf(i)) + subtype.getSubPaths().map { subpath -> listOf(i) + subpath }
+        return listOf<DisagreementPath>(emptyList()) + subtypes.withIndex().flatMap { (i, subtype) ->
+            subtype.getSubPaths().map { subpath -> listOf(i) + subpath }
         }
     }
 
     override fun getSubtermAt(path: DisagreementPath): Type {
+        if (path.isEmpty()) return this
         return subtypes[path.first()].getSubtermAt(path.drop(1))
     }
 

@@ -3,7 +3,7 @@ package dk.maxkandersen.type
 import dk.maxkandersen.unification.DisagreementPath
 import dk.maxkandersen.unification.Substitution
 
-interface Type : TypeScheme {
+interface Type : TypeScheme, Comparable<Type> {
     fun substitute(substitution: Substitution): Type
     fun includes(typeVar: TypeVar): Boolean
 

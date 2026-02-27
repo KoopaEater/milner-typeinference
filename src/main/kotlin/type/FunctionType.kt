@@ -25,4 +25,17 @@ data class FunctionType(
         return FunctionType(from.substitute(substitution), to.substitute(substitution))
     }
 
+    override fun compareTo(other: Type): Int {
+        return when (other) {
+            is TypeVar -> 1
+            is BoolType -> 1
+            is IntType -> 1
+            is FunctionType -> {
+                val comp1 = this.from.compareTo(other.from)
+                if (comp1 != 0) comp1 else this.to.compareTo(other.to)
+            }
+            else -> -1
+        }
+    }
+
 }

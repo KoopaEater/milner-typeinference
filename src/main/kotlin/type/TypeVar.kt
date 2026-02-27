@@ -26,10 +26,11 @@ data class TypeVar(
     }
 
     override fun getSubPaths(): List<DisagreementPath> {
-        return emptyList()
+        return listOf(emptyList())
     }
 
     override fun getSubtermAt(path: DisagreementPath): Type {
+        if (path.isEmpty()) return this
         throw IllegalArgumentException("TypeVar has no subterms")
     }
 
@@ -43,5 +44,12 @@ data class TypeVar(
 
     override fun includes(typeVar: TypeVar): Boolean {
         return this == typeVar
+    }
+
+    override fun compareTo(other: Type): Int {
+        return when (other) {
+            is TypeVar -> sym.compareTo(other.sym)
+            else -> -1
+        }
     }
 }

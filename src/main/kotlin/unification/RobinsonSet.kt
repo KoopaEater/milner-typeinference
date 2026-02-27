@@ -1,34 +1,32 @@
 package dk.maxkandersen.unification
 
-import dk.maxkandersen.type.FunctionType
-import dk.maxkandersen.type.PairType
-import dk.maxkandersen.type.TypeVar
 import dk.maxkandersen.type.Type
+import dk.maxkandersen.type.TypeVar
 import java.util.Optional
 
-class RobinsonSet(val terms: Set<Type>) : Unifiable {
+class RobinsonSet(vararg terms: Type) : Unifiable {
 
-    var s: Substitution = emptySubstitution()
-    var ts: Set<Type> = terms
+    var S: Substitution = emptySubstitution()
+    var Ts: List<Type> = terms.sorted()
 
     override fun unify(): Substitution {
-        while (!isSingleton()) {
-            ts = applySubstitution()
+        while (true) {
+            val D = getDisagreementPair()
+            if (D.isEmpty) break
+            val s = D.get().first
+            val t = D.get().second
+            if (s !is TypeVar || t.includes(s)) throw RobinsonUnificationException(s, t)
+            S = S.compose(substitutionOf(s to t))
+            Ts = applySubstitution().sorted()
         }
-        return s
+        return S
     }
 
     private fun applySubstitution(): Set<Type> {
-        return terms.map { term -> term.substitute(s) }.toSet()
+        return Ts.map { term -> term.substitute(S) }.toSet()
     }
 
-    private fun isSingleton() : Boolean {
-        if (terms.size <= 1) return true
-        val first = ts.first()
-        return terms.all { it == first }
-    }
-
-    private fun getAllPaths(): List<DisagreementPath> {
+    fun getAllPaths(): List<DisagreementPath> {
         val lexOrder = Comparator<List<Int>> { a, b ->
             val n = minOf(a.size, b.size)
             for (i in 0 until n) {
@@ -38,29 +36,28 @@ class RobinsonSet(val terms: Set<Type>) : Unifiable {
             a.size.compareTo(b.size)
         }
 
-        return terms
+        return Ts
             .flatMap { term -> term.getSubPaths() }
             .distinct()
             .sortedWith(lexOrder)
     }
 
-    private fun getDisagreementPath(): Optional<DisagreementPath> {
-        if (terms.size <= 1) return Optional.empty()
+    fun getDisagreementPair(): Optional<Pair<Type, Type>> {
+        if (Ts.size <= 1) return Optional.empty()
         for (path in getAllPaths()) {
-            // TODO: THIS IS WRONG! BUT CONTINUE HERE
-            val heads = terms.map { term -> term.getSubtermAt(path) }
-            val allSame = heads.all { head -> head == heads.first() }
-            if (!allSame) return Optional.of(path)
+            val heads = Ts.map { term -> term.getSubtermAt(path) }
+            for (head in heads) {
+                if (!head.hasSameTopSymbolAs(heads.first())) {
+                    return Optional.of(heads.first() to head)
+                }
+            }
         }
         return Optional.empty()
     }
 
-    private fun getDisagreementSet(): Set<Type> {
-        TODO("Not yet implemented")
-    }
-
     override fun toString(): String {
-        val contentsString = terms.joinToString()
+        val contentsString = Ts.joinToString { term -> term.toTermString() }
         return "{$contentsString}"
     }
+
 }

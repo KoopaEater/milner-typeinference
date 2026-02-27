@@ -22,7 +22,7 @@ data class Constraint(val left: Type, val right: Type) : Unifiable {
                 val s2 = Constraint(left.right.substitute(s1), right.right.substitute(s1)).unify()
                 return s1 + s2
             }
-            else -> throw UnificationException(this)
+            else -> throw ConstraintUnificationException(this)
         }
     }
 
