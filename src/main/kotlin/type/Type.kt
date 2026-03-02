@@ -7,7 +7,7 @@ interface Type : TypeScheme, Comparable<Type> {
     fun substitute(substitution: Substitution): Type
     fun includes(typeVar: TypeVar): Boolean
 
-    // TERM
+    //////// ROBINSON UNIFICATION ////////
     fun toTermString(): String
     fun getSubPaths(): List<DisagreementPath>
     fun getSubtermAt(path: DisagreementPath): Type

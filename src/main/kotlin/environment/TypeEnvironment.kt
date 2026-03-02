@@ -1,4 +1,6 @@
 package dk.maxkandersen.environment
 
-interface TypeEnvironment {
-}
+import dk.maxkandersen.type.TypeScheme
+
+typealias Var = String
+typealias TypeEnvironment = Map<Var, TypeScheme>
