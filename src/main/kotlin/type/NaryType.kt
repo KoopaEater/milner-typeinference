@@ -9,6 +9,8 @@ interface NaryType : Type {
         return subtypes.any { subtype -> subtype.includes(typeVar) }
     }
 
+    //////// ROBINSON UNIFICATION ////////
+
     override fun getSubPaths(): List<DisagreementPath> {
         return listOf<DisagreementPath>(emptyList()) + subtypes.withIndex().flatMap { (i, subtype) ->
             subtype.getSubPaths().map { subpath -> listOf(i) + subpath }

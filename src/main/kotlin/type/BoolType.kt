@@ -8,6 +8,16 @@ object BoolType : Type {
         return "bool"
     }
 
+    override fun substitute(substitution: Substitution): Type {
+        return BoolType
+    }
+
+    override fun includes(typeVar: TypeVar): Boolean {
+        return false
+    }
+
+    //////// ROBINSON UNIFICATION ////////
+
     override fun toTermString(): String {
         return "bool"
     }
@@ -23,14 +33,6 @@ object BoolType : Type {
 
     override fun hasSameTopSymbolAs(other: Type): Boolean {
         return other is BoolType
-    }
-
-    override fun substitute(substitution: Substitution): Type {
-        return BoolType
-    }
-
-    override fun includes(typeVar: TypeVar): Boolean {
-        return false
     }
 
     override fun compareTo(other: Type): Int {

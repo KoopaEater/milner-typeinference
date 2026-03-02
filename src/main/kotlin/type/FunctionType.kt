@@ -13,16 +13,18 @@ data class FunctionType(
         return "$from -> $to"
     }
 
+    override fun substitute(substitution: Substitution): Type {
+        return FunctionType(from.substitute(substitution), to.substitute(substitution))
+    }
+
+    //////// ROBINSON UNIFICATION ////////
+
     override fun toTermString(): String {
         return "f(${from.toTermString()},${to.toTermString()})"
     }
 
     override fun hasSameTopSymbolAs(other: Type): Boolean {
         return other is FunctionType
-    }
-
-    override fun substitute(substitution: Substitution): Type {
-        return FunctionType(from.substitute(substitution), to.substitute(substitution))
     }
 
     override fun compareTo(other: Type): Int {

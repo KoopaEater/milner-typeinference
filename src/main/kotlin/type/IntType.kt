@@ -8,6 +8,16 @@ object IntType : Type {
         return "int"
     }
 
+    override fun substitute(substitution: Substitution): Type {
+        return IntType
+    }
+
+    override fun includes(typeVar: TypeVar): Boolean {
+        return false
+    }
+
+    //////// ROBINSON UNIFICATION ////////
+
     override fun toTermString(): String {
         return "int"
     }
@@ -23,14 +33,6 @@ object IntType : Type {
 
     override fun hasSameTopSymbolAs(other: Type): Boolean {
         return other is IntType
-    }
-
-    override fun substitute(substitution: Substitution): Type {
-        return IntType
-    }
-
-    override fun includes(typeVar: TypeVar): Boolean {
-        return false
     }
 
     override fun compareTo(other: Type): Int {

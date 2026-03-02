@@ -21,6 +21,16 @@ data class TypeVar(
         return sym
     }
 
+    override fun substitute(substitution: Substitution): Type {
+        return substitution[this] ?: return this
+    }
+
+    override fun includes(typeVar: TypeVar): Boolean {
+        return this == typeVar
+    }
+
+    //////// ROBINSON UNIFICATION ////////
+
     override fun toTermString(): String {
         return sym
     }
@@ -36,14 +46,6 @@ data class TypeVar(
 
     override fun hasSameTopSymbolAs(other: Type): Boolean {
         return other is TypeVar && sym == other.sym
-    }
-
-    override fun substitute(substitution: Substitution): Type {
-        return substitution[this] ?: return this
-    }
-
-    override fun includes(typeVar: TypeVar): Boolean {
-        return this == typeVar
     }
 
     override fun compareTo(other: Type): Int {

@@ -12,16 +12,18 @@ data class PairType(
         return "($left x $right)"
     }
 
+    override fun substitute(substitution: Substitution): Type {
+        return PairType(left.substitute(substitution), right.substitute(substitution))
+    }
+
+    //////// ROBINSON UNIFICATION ///////
+
     override fun toTermString(): String {
         return "p(${left.toTermString()},${right.toTermString()})"
     }
 
     override fun hasSameTopSymbolAs(other: Type): Boolean {
         return other is PairType
-    }
-
-    override fun substitute(substitution: Substitution): Type {
-        return PairType(left.substitute(substitution), right.substitute(substitution))
     }
 
     override fun compareTo(other: Type): Int {
