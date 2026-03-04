@@ -15,6 +15,9 @@ data class TypeVar(
             counter++
             return sym
         }
+        fun reset() {
+            counter = 0
+        }
     }
 
     override fun toString(): String {
