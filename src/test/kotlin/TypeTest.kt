@@ -94,8 +94,16 @@ class TypeTest {
     fun quantifyingTypeSchemeHasCorrectString() {
         val a = TypeVar("a")
         val b = TypeVar("b")
-        val typescheme = QuantifyingTypeScheme(b, FunctionType(a, b))
+        val typescheme = QuantifyingTypeScheme(listOf(b), FunctionType(a, b))
         assertEquals("\\/b.a -> b", typescheme.toString())
+    }
+
+    @Test
+    fun quantifyingTypeSchemeWithMultipleQuantifiersHasCorrectString() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val typescheme = QuantifyingTypeScheme(listOf(a, b), FunctionType(a, b))
+        assertEquals("\\/a, b.a -> b", typescheme.toString())
     }
 
     @Test
@@ -159,8 +167,17 @@ class TypeTest {
     fun equalQuantifyingTypeSchemesAreEqual() {
         val a = TypeVar("a")
         val b = TypeVar("b")
-        val typescheme1 = QuantifyingTypeScheme(b, FunctionType(a, b))
-        val typescheme2 = QuantifyingTypeScheme(b, FunctionType(a, b))
+        val typescheme1 = QuantifyingTypeScheme(listOf(b), FunctionType(a, b))
+        val typescheme2 = QuantifyingTypeScheme(listOf(b), FunctionType(a, b))
+        assertEquals(typescheme1, typescheme2)
+    }
+
+    @Test
+    fun equalQuantifyingTypeSchemesWithMultipleQuantifiersAreEqual() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val typescheme1 = QuantifyingTypeScheme(listOf(a, b), FunctionType(a, b))
+        val typescheme2 = QuantifyingTypeScheme(listOf(a, b), FunctionType(a, b))
         assertEquals(typescheme1, typescheme2)
     }
 
@@ -168,8 +185,8 @@ class TypeTest {
     fun unequalQuantifyingTypeSchemesAreNotEqual() {
         val a = TypeVar("a")
         val b = TypeVar("b")
-        val typescheme1 = QuantifyingTypeScheme(b, FunctionType(a, b))
-        val typescheme2 = QuantifyingTypeScheme(a, FunctionType(b, a))
+        val typescheme1 = QuantifyingTypeScheme(listOf(b), FunctionType(a, b))
+        val typescheme2 = QuantifyingTypeScheme(listOf(a), FunctionType(b, a))
         assertNotEquals(typescheme1, typescheme2)
     }
 

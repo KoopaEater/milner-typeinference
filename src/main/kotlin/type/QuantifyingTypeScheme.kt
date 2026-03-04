@@ -1,10 +1,11 @@
 package dk.maxkandersen.type
 
 data class QuantifyingTypeScheme(
-    val quantifier: TypeVar,
+    val quantifier: List<TypeVar>,
     val type: TypeScheme
 ) : TypeScheme {
     override fun toString(): String {
-        return "\\/$quantifier.$type"
+        val quantifiers = quantifier.joinToString { it.sym }
+        return "\\/$quantifiers.$type"
     }
 }

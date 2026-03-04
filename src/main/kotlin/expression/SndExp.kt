@@ -1,11 +1,10 @@
 package dk.maxkandersen.expression
 
 import dk.maxkandersen.environment.TypeEnvironment
-import dk.maxkandersen.environment.Var
 import dk.maxkandersen.type.Type
 import dk.maxkandersen.unification.Substitution
 
-data class LambdaExp(val param: Var, val body: Expression) : Expression {
+data class SndExp(val exp: Expression) : Expression {
     override fun inferType(te: TypeEnvironment): Pair<Substitution, Type> {
         TODO("Not yet implemented")
     }
