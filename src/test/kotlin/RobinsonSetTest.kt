@@ -34,8 +34,6 @@ class RobinsonSetTest {
     fun getAllPathsGivesCorrectSetOfPaths() {
         val T1 = RobinsonSet(a)
         val T2 = RobinsonSet(a, funab, mixed)
-        println(T1)
-        println(T2)
         assertEquals(listOf(emptyList()), T1.getAllPaths())
         assertEquals(listOf(emptyList(), listOf(0), listOf(0, 0), listOf(0, 1), listOf(0, 1, 0), listOf(0, 1, 1), listOf(1)), T2.getAllPaths())
     }

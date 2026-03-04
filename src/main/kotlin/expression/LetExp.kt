@@ -6,7 +6,7 @@ import dk.maxkandersen.type.Type
 import dk.maxkandersen.unification.Substitution
 
 data class LetExp(val sym: Var, val assignmentExp: Expression, val body: Expression) : Expression {
-    override fun inferType(te: TypeEnvironment): Pair<Substitution, Type> {
+    override fun inferType(te: TypeEnvironment): InferResult {
         TODO("Not yet implemented")
     }
 }

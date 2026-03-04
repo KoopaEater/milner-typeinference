@@ -5,5 +5,5 @@ import dk.maxkandersen.type.Type
 import dk.maxkandersen.unification.Substitution
 
 interface Expression {
-    fun inferType(te: TypeEnvironment): Pair<Substitution, Type>
+    fun inferType(te: TypeEnvironment): InferResult
 }

@@ -4,6 +4,11 @@ import dk.maxkandersen.unification.DisagreementPath
 import dk.maxkandersen.unification.Substitution
 
 interface Type : TypeScheme, Comparable<Type> {
+    override val quantifiers: List<TypeVar>
+        get() = emptyList()
+    override val type: Type
+        get() = this
+
     fun substitute(substitution: Substitution): Type
     fun includes(typeVar: TypeVar): Boolean
 
