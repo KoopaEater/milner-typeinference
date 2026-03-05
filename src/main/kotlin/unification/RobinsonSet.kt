@@ -16,7 +16,7 @@ class RobinsonSet(vararg terms: Type) : Unifiable {
             val s = D.get().first
             val t = D.get().second
             if (s !is TypeVar || t.includes(s)) throw RobinsonUnificationException(s, t)
-            S = S.compose(substitutionOf(s to t))
+            S = S compose substitutionOf(s to t)
             Ts = applySubstitution().sorted()
         }
         return S
