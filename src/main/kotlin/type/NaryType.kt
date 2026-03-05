@@ -9,6 +9,10 @@ interface NaryType : Type {
         return subtypes.any { subtype -> subtype.includes(typeVar) }
     }
 
+    override fun freeVars(): Set<TypeVar> {
+        return subtypes.flatMap { subtype -> subtype.freeVars() }.toSet()
+    }
+
     //////// ROBINSON UNIFICATION ////////
 
     override fun getSubPaths(): List<DisagreementPath> {

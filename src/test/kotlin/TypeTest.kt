@@ -1,9 +1,11 @@
 import dk.maxkandersen.type.BoolType
 import dk.maxkandersen.type.FunctionType
 import dk.maxkandersen.type.IntType
+import dk.maxkandersen.type.InvalidAlphaConversionException
 import dk.maxkandersen.type.PairType
 import dk.maxkandersen.type.QuantifyingTypeScheme
 import dk.maxkandersen.type.TypeVar
+import dk.maxkandersen.unification.substitutionOf
 import kotlin.test.*
 
 class TypeTest {
@@ -257,4 +259,94 @@ class TypeTest {
         val subpaths = funtyp.getSubPaths()
         assertEquals(listOf(emptyList(), listOf(0), listOf(0, 0), listOf(0, 1), listOf(0, 1, 0), listOf(0, 1, 1), listOf(1)), subpaths)
     }
+
+    @Test
+    fun boolTypeHasCorrectFreeVars() {
+        val free = BoolType.freeVars()
+        assertEquals(emptySet(), free)
+    }
+
+    @Test
+    fun intTypeHasCorrectFreeVars() {
+        val free = IntType.freeVars()
+        assertEquals(emptySet(), free)
+    }
+
+    @Test
+    fun typeVarHasCorrectFreeVars() {
+        val a = TypeVar("a")
+        val free = a.freeVars()
+        assertEquals(setOf(a), free)
+    }
+
+    @Test
+    fun funTypeHasCorrectFreeVars() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val funtyp = FunctionType(a, b)
+        val free = funtyp.freeVars()
+        assertEquals(setOf(a, b), free)
+    }
+
+    @Test
+    fun pairTypeHasCorrectFreeVars() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val pair = PairType(a, b)
+        val free = pair.freeVars()
+        assertEquals(setOf(a, b), free)
+    }
+
+    @Test
+    fun quantifyingTypeSchemeHasCorrectFreeVars() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val typescheme = QuantifyingTypeScheme(listOf(b), FunctionType(a, b))
+        val free = typescheme.freeVars()
+        assertEquals(setOf(a), free)
+    }
+
+    @Test
+    fun quantifyingTypeSchemeGivesCorrectAlphaConversion() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val c = TypeVar("c")
+        val typescheme = QuantifyingTypeScheme(listOf(b), FunctionType(a, b))
+        val convertedTypeScheme = typescheme.alphaConvert(mapOf(b to c))
+        val expected = QuantifyingTypeScheme(listOf(c), FunctionType(a, c))
+        assertEquals(expected, convertedTypeScheme)
+    }
+
+    @Test
+    fun quantifyingTypeSchemeWithConversionOfFreeVarFails() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val typescheme = QuantifyingTypeScheme(listOf(b), FunctionType(a, b))
+        assertFailsWith<InvalidAlphaConversionException> { typescheme.alphaConvert(mapOf(b to a)) }
+    }
+
+    @Test
+    fun quantifyingTypeSchemeSubstitutesCorrectly() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val c = TypeVar("c")
+        val typescheme = QuantifyingTypeScheme(listOf(b), FunctionType(a, b))
+        val s = substitutionOf(a to c)
+        val convertedTypeScheme = typescheme.substitute(s)
+        val expected = QuantifyingTypeScheme(listOf(b), FunctionType(c, b))
+        assertEquals(expected, convertedTypeScheme)
+    }
+
+    @Test
+    fun quantifyingTypeSchemeWithQuantifierInRegionSubstitutesCorrectly() {
+        val a = TypeVar("a")
+        val b = TypeVar("b")
+        val fresh0 = TypeVar("'t0")
+        val typescheme = QuantifyingTypeScheme(listOf(b), FunctionType(a, b))
+        val s = substitutionOf(a to b)
+        val convertedTypeScheme = typescheme.substitute(s)
+        val expected = QuantifyingTypeScheme(listOf(fresh0), FunctionType(b, fresh0))
+        assertEquals(expected, convertedTypeScheme)
+    }
+
 }

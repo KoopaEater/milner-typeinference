@@ -28,6 +28,10 @@ data class TypeVar(
         return substitution[this] ?: return this
     }
 
+    override fun freeVars(): Set<TypeVar> {
+        return setOf(this)
+    }
+
     override fun includes(typeVar: TypeVar): Boolean {
         return this == typeVar
     }

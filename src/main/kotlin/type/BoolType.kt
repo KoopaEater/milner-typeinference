@@ -1,19 +1,10 @@
 package dk.maxkandersen.type
 
 import dk.maxkandersen.unification.DisagreementPath
-import dk.maxkandersen.unification.Substitution
 
-object BoolType : Type {
+object BoolType : ConstantType {
     override fun toString(): String {
         return "bool"
-    }
-
-    override fun substitute(substitution: Substitution): Type {
-        return BoolType
-    }
-
-    override fun includes(typeVar: TypeVar): Boolean {
-        return false
     }
 
     //////// ROBINSON UNIFICATION ////////

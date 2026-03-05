@@ -10,3 +10,5 @@ fun emptySubstitution() = emptyMap<TypeVar, Type>()
 fun Substitution.compose(new: Substitution): Substitution {
     return this.mapValues { (_, rhs) -> rhs.substitute(new) } + new
 }
+
+fun Substitution.region() = this.values.flatMap { type -> type.freeVars() }.toSet()

@@ -8,8 +8,9 @@ interface Type : TypeScheme, Comparable<Type> {
         get() = emptyList()
     override val type: Type
         get() = this
+    override fun alphaConvert(conversion: Map<TypeVar, TypeVar>): TypeScheme = this
 
-    fun substitute(substitution: Substitution): Type
+    override fun substitute(substitution: Substitution): Type
     fun includes(typeVar: TypeVar): Boolean
 
     //////// ROBINSON UNIFICATION ////////
