@@ -1,6 +1,7 @@
 package dk.maxkandersen.environment
 
 import dk.maxkandersen.type.TypeScheme
+import dk.maxkandersen.type.TypeVar
 import dk.maxkandersen.unification.Substitution
 
 typealias Var = String
@@ -11,4 +12,8 @@ fun typeEnvironmentOf(vararg pairs: Pair<Var, TypeScheme>) : TypeEnvironment = p
 
 fun TypeEnvironment.substitute(substitution: Substitution) : TypeEnvironment {
     return this.mapValues { (_, typeScheme) -> typeScheme.substitute(substitution) }
+}
+
+fun TypeEnvironment.freeVars() : Set<TypeVar> {
+    return this.values.flatMap { typeScheme -> typeScheme.freeVars() }.toSet()
 }

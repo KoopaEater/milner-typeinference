@@ -1,3 +1,4 @@
+import dk.maxkandersen.environment.TypeEnvironment
 import dk.maxkandersen.environment.UnknownVariableException
 import dk.maxkandersen.environment.emptyTypeEnvironment
 import dk.maxkandersen.environment.typeEnvironmentOf
@@ -10,7 +11,6 @@ import dk.maxkandersen.type.IntType
 import dk.maxkandersen.type.QuantifyingTypeScheme
 import dk.maxkandersen.type.TypeVar
 import dk.maxkandersen.unification.emptySubstitution
-import org.junit.jupiter.api.assertThrows
 import kotlin.test.*
 
 class ExpressionTest {

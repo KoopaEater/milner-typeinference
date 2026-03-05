@@ -1,5 +1,7 @@
 package dk.maxkandersen.type
 
+import dk.maxkandersen.environment.TypeEnvironment
+import dk.maxkandersen.environment.freeVars
 import dk.maxkandersen.unification.DisagreementPath
 import dk.maxkandersen.unification.Substitution
 
