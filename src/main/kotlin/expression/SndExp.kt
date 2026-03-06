@@ -7,7 +7,7 @@ import dk.maxkandersen.unification.Constraint
 import dk.maxkandersen.unification.compose
 
 data class SndExp(val exp: Expression) : Expression {
-    override fun inferTypeW(te: TypeEnvironment): InferResult {
+    override fun inferTypeW(te: TypeEnvironment): InferWResult {
         val expRes = exp.inferTypeW(te)
         val a = TypeVar()
         val b = TypeVar()

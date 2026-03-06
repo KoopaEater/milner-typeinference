@@ -8,7 +8,7 @@ import dk.maxkandersen.unification.Constraint
 import dk.maxkandersen.unification.compose
 
 data class ApplicationExp(val funExp: Expression, val paramExp: Expression) : Expression {
-    override fun inferTypeW(te: TypeEnvironment): InferResult {
+    override fun inferTypeW(te: TypeEnvironment): InferWResult {
         val funRes = funExp.inferTypeW(te)
         val paramRes = paramExp.inferTypeW(te.substitute(funRes.substitution))
         val a = TypeVar()

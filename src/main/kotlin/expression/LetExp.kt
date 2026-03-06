@@ -7,7 +7,7 @@ import dk.maxkandersen.environment.substitute
 import dk.maxkandersen.unification.compose
 
 data class LetExp(val sym: Var, val assignmentExp: Expression, val body: Expression) : Expression {
-    override fun inferTypeW(te: TypeEnvironment): InferResult {
+    override fun inferTypeW(te: TypeEnvironment): InferWResult {
         val assignmentRes = assignmentExp.inferTypeW(te)
         val s1te = te.substitute(assignmentRes.substitution)
         val paramType = s1te.closure(assignmentRes.type)

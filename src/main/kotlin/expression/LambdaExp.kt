@@ -6,7 +6,7 @@ import dk.maxkandersen.type.FunctionType
 import dk.maxkandersen.type.TypeVar
 
 data class LambdaExp(val param: Var, val body: Expression) : Expression {
-    override fun inferTypeW(te: TypeEnvironment): InferResult {
+    override fun inferTypeW(te: TypeEnvironment): InferWResult {
         val a = TypeVar()
         val te1 = te + (param to a)
         val bodyRes = body.inferTypeW(te1)
