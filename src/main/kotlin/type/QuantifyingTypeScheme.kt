@@ -2,6 +2,7 @@ package dk.maxkandersen.type
 
 import dk.maxkandersen.unification.Substitution
 import dk.maxkandersen.unification.region
+import dk.maxkandersen.unification.substitutionOf
 
 data class QuantifyingTypeScheme(
     override val quantifiers: List<TypeVar>,
@@ -30,5 +31,12 @@ data class QuantifyingTypeScheme(
         val newQuantifiers = quantifiers.map { quantifier -> conversion[quantifier] ?: quantifier }
         val newType = type.substitute(conversion)
         return QuantifyingTypeScheme(newQuantifiers, newType)
+    }
+
+    override fun instantiate(): Type {
+        val freshTypes = List(quantifiers.size) { TypeVar() }
+        val pairs = quantifiers.zip(freshTypes).toTypedArray()
+        val substitution = substitutionOf(*pairs)
+        return type.substitute(substitution)
     }
 }

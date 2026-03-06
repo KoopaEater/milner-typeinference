@@ -1,3 +1,4 @@
+import dk.maxkandersen.environment.closure
 import dk.maxkandersen.environment.emptyTypeEnvironment
 import dk.maxkandersen.environment.freeVars
 import dk.maxkandersen.environment.substitute
@@ -41,7 +42,7 @@ class TypeEnvironmentTest {
     @Test
     fun boolTypeGivesCorrectClosure() {
         val te = emptyTypeEnvironment()
-        val closure = BoolType.closure(te)
+        val closure = te.closure(BoolType)
         val expected = QuantifyingTypeScheme(emptyList(), BoolType)
         assertEquals(expected, closure)
     }
@@ -49,7 +50,7 @@ class TypeEnvironmentTest {
     @Test
     fun intTypeGivesCorrectClosure() {
         val te = emptyTypeEnvironment()
-        val closure = IntType.closure(te)
+        val closure = te.closure(IntType)
         val expected = QuantifyingTypeScheme(emptyList(), IntType)
         assertEquals(expected, closure)
     }
@@ -59,8 +60,8 @@ class TypeEnvironmentTest {
         val a = TypeVar("a")
         val b = TypeVar("b")
         val te = typeEnvironmentOf("x" to b)
-        val aClosure = a.closure(te)
-        val bClosure = b.closure(te)
+        val aClosure = te.closure(a)
+        val bClosure = te.closure(b)
         val aExpected = QuantifyingTypeScheme(listOf(a), a)
         val bExpected = QuantifyingTypeScheme(emptyList(), b)
         assertEquals(aExpected, aClosure)
@@ -75,8 +76,8 @@ class TypeEnvironmentTest {
         val funab = FunctionType(a, b)
         val funac = FunctionType(a, c)
         val te = typeEnvironmentOf("x" to c)
-        val funabClosure = funab.closure(te)
-        val funacClosure = funac.closure(te)
+        val funabClosure = te.closure(funab)
+        val funacClosure = te.closure(funac)
         val funabExpected = QuantifyingTypeScheme(listOf(a, b), funab)
         val funacExpected = QuantifyingTypeScheme(listOf(a), funac)
         assertEquals(funabExpected, funabClosure)
@@ -91,8 +92,8 @@ class TypeEnvironmentTest {
         val pairab = PairType(a, b)
         val pairac = PairType(a, c)
         val te = typeEnvironmentOf("x" to c)
-        val pairabClosure = pairab.closure(te)
-        val pairacClosure = pairac.closure(te)
+        val pairabClosure = te.closure(pairab)
+        val pairacClosure = te.closure(pairac)
         val pairabExpected = QuantifyingTypeScheme(listOf(a, b), pairab)
         val pairacExpected = QuantifyingTypeScheme(listOf(a), pairac)
         assertEquals(pairabExpected, pairabClosure)

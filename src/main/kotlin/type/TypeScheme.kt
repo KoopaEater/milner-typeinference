@@ -9,4 +9,5 @@ interface TypeScheme {
     fun  substitute(substitution: Substitution): TypeScheme
     fun freeVars(): Set<TypeVar>
     fun alphaConvert(conversion: Map<TypeVar, TypeVar>): TypeScheme
+    fun instantiate(): Type
 }

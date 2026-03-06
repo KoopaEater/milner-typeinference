@@ -11,14 +11,10 @@ interface Type : TypeScheme, Comparable<Type> {
     override val type: Type
         get() = this
     override fun alphaConvert(conversion: Map<TypeVar, TypeVar>): TypeScheme = this
+    override fun instantiate(): Type = this
 
     override fun substitute(substitution: Substitution): Type
     fun includes(typeVar: TypeVar): Boolean
-
-    fun closure(te: TypeEnvironment): TypeScheme {
-        val quantifiers = this.freeVars() - te.freeVars()
-        return QuantifyingTypeScheme(quantifiers.toList(), this)
-    }
 
     //////// ROBINSON UNIFICATION ////////
     fun toTermString(): String

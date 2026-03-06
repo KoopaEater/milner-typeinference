@@ -1,5 +1,7 @@
 package dk.maxkandersen.environment
 
+import dk.maxkandersen.type.QuantifyingTypeScheme
+import dk.maxkandersen.type.Type
 import dk.maxkandersen.type.TypeScheme
 import dk.maxkandersen.type.TypeVar
 import dk.maxkandersen.unification.Substitution
@@ -16,4 +18,9 @@ fun TypeEnvironment.substitute(substitution: Substitution) : TypeEnvironment {
 
 fun TypeEnvironment.freeVars() : Set<TypeVar> {
     return this.values.flatMap { typeScheme -> typeScheme.freeVars() }.toSet()
+}
+
+fun TypeEnvironment.closure(type: Type): TypeScheme {
+    val quantifiers = type.freeVars() - this.freeVars()
+    return QuantifyingTypeScheme(quantifiers.toList(), type)
 }
