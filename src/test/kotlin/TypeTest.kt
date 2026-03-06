@@ -10,6 +10,11 @@ import kotlin.test.*
 
 class TypeTest {
 
+    @BeforeTest
+    fun setup() {
+        TypeVar.reset()
+    }
+
     @Test
     fun boolTypeHasCorrectString() {
         assertEquals("bool", BoolType.toString())

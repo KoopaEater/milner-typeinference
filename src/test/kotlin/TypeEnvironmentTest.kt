@@ -13,6 +13,12 @@ import dk.maxkandersen.unification.substitutionOf
 import kotlin.test.*
 
 class TypeEnvironmentTest {
+
+    @BeforeTest
+    fun setup() {
+        TypeVar.reset()
+    }
+
     @Test
     fun typeEnvironmentSubstitutesCorrectly() {
         val a = TypeVar("a")

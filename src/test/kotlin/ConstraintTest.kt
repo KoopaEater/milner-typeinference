@@ -20,6 +20,11 @@ class ConstraintTest {
     val pairba = PairType(b, a)
     val paircd = PairType(c, d)
 
+    @BeforeTest
+    fun setup() {
+        TypeVar.reset()
+    }
+
     @Test
     fun constraintHasCorrectString() {
         val constraint = Constraint(c, funab)

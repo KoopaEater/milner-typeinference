@@ -1,10 +1,11 @@
-import dk.maxkandersen.environment.TypeEnvironment
 import dk.maxkandersen.environment.UnknownVariableException
 import dk.maxkandersen.environment.emptyTypeEnvironment
 import dk.maxkandersen.environment.substitute
 import dk.maxkandersen.environment.typeEnvironmentOf
 import dk.maxkandersen.expression.ApplicationExp
+import dk.maxkandersen.expression.BoolExp
 import dk.maxkandersen.expression.FstExp
+import dk.maxkandersen.expression.IntExp
 import dk.maxkandersen.expression.LambdaExp
 import dk.maxkandersen.expression.LetExp
 import dk.maxkandersen.expression.PairExp
@@ -18,6 +19,7 @@ import dk.maxkandersen.type.IntType
 import dk.maxkandersen.type.PairType
 import dk.maxkandersen.type.QuantifyingTypeScheme
 import dk.maxkandersen.type.TypeVar
+import dk.maxkandersen.unification.ConstraintUnificationException
 import dk.maxkandersen.unification.emptySubstitution
 import kotlin.test.*
 
@@ -144,6 +146,87 @@ class ExpressionTest {
         val res = exp.inferType(te)
         val expectedType = te.substitute(res.substitution)["y"]
         assertEquals(expectedType, res.type)
+    }
+
+    @Test
+    fun intExpInfersCorrectly() {
+        val exp = IntExp(1)
+        val res = exp.inferType(emptyTypeEnvironment())
+        assertEquals(emptySubstitution(), res.substitution)
+        assertEquals(IntType, res.type)
+    }
+
+    @Test
+    fun boolExpInfersCorrectly() {
+        val exp = BoolExp(true)
+        val res = exp.inferType(emptyTypeEnvironment())
+        assertEquals(emptySubstitution(), res.substitution)
+        assertEquals(BoolType, res.type)
+    }
+
+    // let f = λx.x in f 5 : Int
+    @Test
+    fun example1InfersCorrectly() {
+        val te = emptyTypeEnvironment()
+        val exp = LetExp("f", LambdaExp("x", VarExp("x")), ApplicationExp(VarExp("f"), IntExp(5)))
+        val res = exp.inferType(te)
+        assertEquals(IntType, res.type)
+    }
+
+    // (λp. snd p)(5 × true) : Bool
+    @Test
+    fun example2InfersCorrectly() {
+        val te = emptyTypeEnvironment()
+        val exp = ApplicationExp(LambdaExp("p", SndExp(VarExp("p"))), PairExp(IntExp(5), BoolExp(true)))
+        val res = exp.inferType(te)
+        assertEquals(BoolType, res.type)
+    }
+
+    // let f = λx.x in let g = λy.f y in g 5 : Int
+    @Test
+    fun example3InfersCorrectly() {
+        val te = emptyTypeEnvironment()
+        val exp = LetExp("f", LambdaExp("x", VarExp("x")), LetExp("g", LambdaExp("y", ApplicationExp(VarExp("f"), VarExp("y"))), ApplicationExp(VarExp("g"), IntExp(5))))
+        val res = exp.inferType(te)
+        assertEquals(IntType, res.type)
+    }
+
+    // let g = λx.x in let f = λx.λy.x y in f g 2 : Int
+    @Test
+    fun felixExampleInfersCorrectly() {
+        val te = emptyTypeEnvironment()
+        val exp = LetExp("g", LambdaExp("x", VarExp("x")), LetExp("f", LambdaExp("x", LambdaExp("y", ApplicationExp(VarExp("x"), VarExp("y")))), ApplicationExp(ApplicationExp(VarExp("f"), VarExp("g")), IntExp(2))))
+        val res = exp.inferType(te)
+        assertEquals(IntType, res.type)
+    }
+
+    // let f = λx.y in f 2 : t1
+    @Test
+    fun example4InfersCorrectly() {
+        val te = typeEnvironmentOf("y" to TypeVar("t1"))
+        val exp = LetExp("f", LambdaExp("x", VarExp("y")), ApplicationExp(VarExp("f"), IntExp(2)))
+        val res = exp.inferType(te)
+        val expectedType = te.substitute(res.substitution)["y"]
+        assertEquals(expectedType, res.type)
+    }
+
+    // λf.(f 5, f true) : UnificationError
+    @Test
+    fun example5Fails() {
+        val te = emptyTypeEnvironment()
+        val exp = LambdaExp("f", PairExp(ApplicationExp(VarExp("f"), IntExp(5)), ApplicationExp(VarExp("f"), BoolExp(true))))
+        assertFailsWith<ConstraintUnificationException> { exp.inferType(te) }
+    }
+
+    // let f = λx.e in (f 5, f true) : (t, t)
+    @Test
+    fun example6InfersCorrectly() {
+        val te = typeEnvironmentOf("e" to TypeVar("t"))
+        val exp = LetExp("f", LambdaExp("x", VarExp("e")), PairExp(ApplicationExp(VarExp("f"), IntExp(5)), ApplicationExp(VarExp("f"), BoolExp(true))))
+        val res = exp.inferType(te)
+        val substitutedType = te.substitute(res.substitution)["e"]!!.instantiate()
+        val expectedPair = PairType(substitutedType, substitutedType)
+        assertEquals(expectedPair, res.type)
     }
 
 }

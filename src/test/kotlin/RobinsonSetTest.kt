@@ -24,6 +24,11 @@ class RobinsonSetTest {
     val crazyfun2 = FunctionType(FunctionType(a, b), FunctionType(c, c))
     val crazyfun3 = FunctionType(FunctionType(a, b), FunctionType(d, c))
 
+    @BeforeTest
+    fun setup() {
+        TypeVar.reset()
+    }
+
     @Test
     fun robinsonSetHasCorrectString() {
         val T = RobinsonSet(a, funab, pairab)
