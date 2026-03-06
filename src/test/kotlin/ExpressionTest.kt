@@ -34,7 +34,7 @@ class ExpressionTest {
     fun simpleVarExpInfersCorrectly() {
         val te = typeEnvironmentOf("x" to IntType)
         val exp = VarExp("x")
-        val res = exp.inferType(te)
+        val res = exp.inferTypeW(te)
         assertEquals(emptySubstitution(), res.substitution)
         assertEquals(IntType, res.type)
     }
@@ -46,7 +46,7 @@ class ExpressionTest {
         val typescheme = QuantifyingTypeScheme(listOf(x, y), FunctionType(x, y))
         val te = typeEnvironmentOf("x" to typescheme)
         val exp = VarExp("x")
-        val res = exp.inferType(te)
+        val res = exp.inferTypeW(te)
         assertEquals(emptySubstitution(), res.substitution)
         val fresh0 = TypeVar("'t0")
         val fresh1 = TypeVar("'t1")
@@ -58,13 +58,13 @@ class ExpressionTest {
     fun unknownVarExpFails() {
         val te = typeEnvironmentOf("x" to IntType)
         val exp = VarExp("y")
-        assertFailsWith<UnknownVariableException> { exp.inferType(te) }
+        assertFailsWith<UnknownVariableException> { exp.inferTypeW(te) }
     }
 
     @Test
     fun lambdaExpInfersCorrectly() {
         val exp = LambdaExp("x", VarExp("x"))
-        val res = exp.inferType(emptyTypeEnvironment())
+        val res = exp.inferTypeW(emptyTypeEnvironment())
         assertEquals(emptySubstitution(), res.substitution)
         val fresh0 = TypeVar("'t0")
         val freshFuntype = FunctionType(fresh0, fresh0)
@@ -75,7 +75,7 @@ class ExpressionTest {
     fun lambdaExpInfersCorrectly2() {
         val te = typeEnvironmentOf("y" to IntType)
         val exp = LambdaExp("x", VarExp("y"))
-        val res = exp.inferType(te)
+        val res = exp.inferTypeW(te)
         assertEquals(emptySubstitution(), res.substitution)
         val fresh0 = TypeVar("'t0")
         val expectedType = FunctionType(fresh0, IntType)
@@ -88,7 +88,7 @@ class ExpressionTest {
         val b = TypeVar("b")
         val te = typeEnvironmentOf("x" to a, "y" to b)
         val exp = PairExp(VarExp("x"), VarExp("y"))
-        val res = exp.inferType(te)
+        val res = exp.inferTypeW(te)
         assertEquals(emptySubstitution(), res.substitution)
         val expectedType = PairType(a, b)
         assertEquals(expectedType, res.type)
@@ -103,7 +103,7 @@ class ExpressionTest {
         val pair = PairExp(x, y)
         val te = typeEnvironmentOf("x" to a, "y" to b)
         val exp = FstExp(pair)
-        val res = exp.inferType(te)
+        val res = exp.inferTypeW(te)
         val expectedType = te.substitute(res.substitution)["x"]
         assertEquals(expectedType, res.type)
     }
@@ -117,7 +117,7 @@ class ExpressionTest {
         val pair = PairExp(x, y)
         val te = typeEnvironmentOf("x" to a, "y" to b)
         val exp = SndExp(pair)
-        val res = exp.inferType(te)
+        val res = exp.inferTypeW(te)
         val expectedType = te.substitute(res.substitution)["y"]
         assertEquals(expectedType, res.type)
     }
@@ -131,7 +131,7 @@ class ExpressionTest {
         val funxy = LambdaExp("x", y)
         val te = typeEnvironmentOf("x" to a, "y" to b)
         val exp = ApplicationExp(funxy, x)
-        val res = exp.inferType(te)
+        val res = exp.inferTypeW(te)
         val expectedType = te.substitute(res.substitution)["y"]
         assertEquals(expectedType, res.type)
     }
@@ -143,7 +143,7 @@ class ExpressionTest {
         val y = VarExp("y")
         val exp = LetExp("x", y, x)
         val te = typeEnvironmentOf("y" to b)
-        val res = exp.inferType(te)
+        val res = exp.inferTypeW(te)
         val expectedType = te.substitute(res.substitution)["y"]
         assertEquals(expectedType, res.type)
     }
@@ -151,7 +151,7 @@ class ExpressionTest {
     @Test
     fun intExpInfersCorrectly() {
         val exp = IntExp(1)
-        val res = exp.inferType(emptyTypeEnvironment())
+        val res = exp.inferTypeW(emptyTypeEnvironment())
         assertEquals(emptySubstitution(), res.substitution)
         assertEquals(IntType, res.type)
     }
@@ -159,7 +159,7 @@ class ExpressionTest {
     @Test
     fun boolExpInfersCorrectly() {
         val exp = BoolExp(true)
-        val res = exp.inferType(emptyTypeEnvironment())
+        val res = exp.inferTypeW(emptyTypeEnvironment())
         assertEquals(emptySubstitution(), res.substitution)
         assertEquals(BoolType, res.type)
     }
@@ -169,7 +169,7 @@ class ExpressionTest {
     fun example1InfersCorrectly() {
         val te = emptyTypeEnvironment()
         val exp = LetExp("f", LambdaExp("x", VarExp("x")), ApplicationExp(VarExp("f"), IntExp(5)))
-        val res = exp.inferType(te)
+        val res = exp.inferTypeW(te)
         assertEquals(IntType, res.type)
     }
 
@@ -178,7 +178,7 @@ class ExpressionTest {
     fun example2InfersCorrectly() {
         val te = emptyTypeEnvironment()
         val exp = ApplicationExp(LambdaExp("p", SndExp(VarExp("p"))), PairExp(IntExp(5), BoolExp(true)))
-        val res = exp.inferType(te)
+        val res = exp.inferTypeW(te)
         assertEquals(BoolType, res.type)
     }
 
@@ -187,7 +187,7 @@ class ExpressionTest {
     fun example3InfersCorrectly() {
         val te = emptyTypeEnvironment()
         val exp = LetExp("f", LambdaExp("x", VarExp("x")), LetExp("g", LambdaExp("y", ApplicationExp(VarExp("f"), VarExp("y"))), ApplicationExp(VarExp("g"), IntExp(5))))
-        val res = exp.inferType(te)
+        val res = exp.inferTypeW(te)
         assertEquals(IntType, res.type)
     }
 
@@ -196,7 +196,7 @@ class ExpressionTest {
     fun felixExampleInfersCorrectly() {
         val te = emptyTypeEnvironment()
         val exp = LetExp("g", LambdaExp("x", VarExp("x")), LetExp("f", LambdaExp("x", LambdaExp("y", ApplicationExp(VarExp("x"), VarExp("y")))), ApplicationExp(ApplicationExp(VarExp("f"), VarExp("g")), IntExp(2))))
-        val res = exp.inferType(te)
+        val res = exp.inferTypeW(te)
         assertEquals(IntType, res.type)
     }
 
@@ -205,7 +205,7 @@ class ExpressionTest {
     fun example4InfersCorrectly() {
         val te = typeEnvironmentOf("y" to TypeVar("t1"))
         val exp = LetExp("f", LambdaExp("x", VarExp("y")), ApplicationExp(VarExp("f"), IntExp(2)))
-        val res = exp.inferType(te)
+        val res = exp.inferTypeW(te)
         val expectedType = te.substitute(res.substitution)["y"]
         assertEquals(expectedType, res.type)
     }
@@ -215,7 +215,7 @@ class ExpressionTest {
     fun example5Fails() {
         val te = emptyTypeEnvironment()
         val exp = LambdaExp("f", PairExp(ApplicationExp(VarExp("f"), IntExp(5)), ApplicationExp(VarExp("f"), BoolExp(true))))
-        assertFailsWith<ConstraintUnificationException> { exp.inferType(te) }
+        assertFailsWith<ConstraintUnificationException> { exp.inferTypeW(te) }
     }
 
     // let f = λx.e in (f 5, f true) : (t, t)
@@ -223,7 +223,7 @@ class ExpressionTest {
     fun example6InfersCorrectly() {
         val te = typeEnvironmentOf("e" to TypeVar("t"))
         val exp = LetExp("f", LambdaExp("x", VarExp("e")), PairExp(ApplicationExp(VarExp("f"), IntExp(5)), ApplicationExp(VarExp("f"), BoolExp(true))))
-        val res = exp.inferType(te)
+        val res = exp.inferTypeW(te)
         val substitutedType = te.substitute(res.substitution)["e"]!!.instantiate()
         val expectedPair = PairType(substitutedType, substitutedType)
         assertEquals(expectedPair, res.type)

@@ -6,7 +6,7 @@ import dk.maxkandersen.environment.Var
 import dk.maxkandersen.unification.emptySubstitution
 
 data class VarExp(val sym: Var): Expression {
-    override fun inferType(te: TypeEnvironment): InferResult {
+    override fun inferTypeW(te: TypeEnvironment): InferResult {
         val envType = te[sym] ?: throw UnknownVariableException(sym)
         return emptySubstitution() to envType.instantiate()
     }
