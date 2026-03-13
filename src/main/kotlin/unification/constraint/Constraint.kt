@@ -1,9 +1,13 @@
-package dk.maxkandersen.unification
+package dk.maxkandersen.unification.constraint
 
 import dk.maxkandersen.type.FunctionType
 import dk.maxkandersen.type.PairType
 import dk.maxkandersen.type.Type
 import dk.maxkandersen.type.TypeVar
+import dk.maxkandersen.unification.Substitution
+import dk.maxkandersen.unification.Unifiable
+import dk.maxkandersen.unification.emptySubstitution
+import dk.maxkandersen.unification.substitutionOf
 
 data class Constraint(val left: Type, val right: Type) : Unifiable {
 

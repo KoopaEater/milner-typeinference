@@ -1,7 +1,12 @@
-package dk.maxkandersen.unification
+package dk.maxkandersen.unification.robinson
 
 import dk.maxkandersen.type.Type
 import dk.maxkandersen.type.TypeVar
+import dk.maxkandersen.unification.Substitution
+import dk.maxkandersen.unification.Unifiable
+import dk.maxkandersen.unification.compose
+import dk.maxkandersen.unification.emptySubstitution
+import dk.maxkandersen.unification.substitutionOf
 import java.util.Optional
 
 class RobinsonSet(vararg terms: Type) : Unifiable {

@@ -3,7 +3,7 @@ package dk.maxkandersen.expression
 import dk.maxkandersen.environment.TypeEnvironment
 import dk.maxkandersen.type.PairType
 import dk.maxkandersen.type.TypeVar
-import dk.maxkandersen.unification.Constraint
+import dk.maxkandersen.unification.constraint.Constraint
 import dk.maxkandersen.unification.compose
 
 data class SndExp(val exp: Expression) : Expression {

@@ -1,5 +1,5 @@
-import dk.maxkandersen.unification.Constraint
-import dk.maxkandersen.unification.ConstraintUnificationException
+import dk.maxkandersen.unification.constraint.Constraint
+import dk.maxkandersen.unification.constraint.ConstraintUnificationException
 import dk.maxkandersen.unification.substitutionOf
 import dk.maxkandersen.type.FunctionType
 import dk.maxkandersen.type.IntType

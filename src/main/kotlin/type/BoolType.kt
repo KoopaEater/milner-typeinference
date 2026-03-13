@@ -1,6 +1,6 @@
 package dk.maxkandersen.type
 
-import dk.maxkandersen.unification.DisagreementPath
+import dk.maxkandersen.unification.robinson.DisagreementPath
 
 object BoolType : ConstantType {
     override fun toString(): String {

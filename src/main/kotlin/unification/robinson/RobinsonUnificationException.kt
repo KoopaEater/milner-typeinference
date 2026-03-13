@@ -1,4 +1,4 @@
-package dk.maxkandersen.unification
+package dk.maxkandersen.unification.robinson
 
 import dk.maxkandersen.type.Type
 

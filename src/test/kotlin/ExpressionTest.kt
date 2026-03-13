@@ -19,7 +19,7 @@ import dk.maxkandersen.type.IntType
 import dk.maxkandersen.type.PairType
 import dk.maxkandersen.type.QuantifyingTypeScheme
 import dk.maxkandersen.type.TypeVar
-import dk.maxkandersen.unification.ConstraintUnificationException
+import dk.maxkandersen.unification.constraint.ConstraintUnificationException
 import dk.maxkandersen.unification.emptySubstitution
 import kotlin.test.*
 

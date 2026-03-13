@@ -4,7 +4,7 @@ import dk.maxkandersen.environment.TypeEnvironment
 import dk.maxkandersen.environment.substitute
 import dk.maxkandersen.type.FunctionType
 import dk.maxkandersen.type.TypeVar
-import dk.maxkandersen.unification.Constraint
+import dk.maxkandersen.unification.constraint.Constraint
 import dk.maxkandersen.unification.compose
 
 data class ApplicationExp(val funExp: Expression, val paramExp: Expression) : Expression {

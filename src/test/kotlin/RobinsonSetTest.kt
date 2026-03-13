@@ -1,9 +1,9 @@
-import dk.maxkandersen.unification.RobinsonSet
+import dk.maxkandersen.unification.robinson.RobinsonSet
 import dk.maxkandersen.type.FunctionType
 import dk.maxkandersen.type.IntType
 import dk.maxkandersen.type.PairType
 import dk.maxkandersen.type.TypeVar
-import dk.maxkandersen.unification.RobinsonUnificationException
+import dk.maxkandersen.unification.robinson.RobinsonUnificationException
 import kotlin.test.*
 
 class RobinsonSetTest {
