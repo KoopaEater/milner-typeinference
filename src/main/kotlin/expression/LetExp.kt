@@ -4,6 +4,7 @@ import dk.maxkandersen.environment.TypeEnvironment
 import dk.maxkandersen.environment.Var
 import dk.maxkandersen.environment.closure
 import dk.maxkandersen.environment.substitute
+import dk.maxkandersen.type.Type
 import dk.maxkandersen.unification.compose
 
 data class LetExp(val sym: Var, val assignmentExp: Expression, val body: Expression) : Expression {
@@ -15,5 +16,13 @@ data class LetExp(val sym: Var, val assignmentExp: Expression, val body: Express
         val bodyRes = body.inferTypeW(paramTe)
         val s = assignmentRes.substitution compose bodyRes.substitution
         return s to bodyRes.type
+    }
+
+    override fun inferTypeUF(te: TypeEnvironment): Type {
+        val assignmentType = assignmentExp.inferTypeUF(te)
+        val paramType = te.closure(assignmentType)
+        val paramTe = te + (sym to paramType)
+        val bodyType = body.inferTypeUF(paramTe)
+        return bodyType
     }
 }

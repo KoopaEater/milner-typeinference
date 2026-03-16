@@ -2,6 +2,7 @@ package dk.maxkandersen.expression
 
 import dk.maxkandersen.environment.TypeEnvironment
 import dk.maxkandersen.type.PairType
+import dk.maxkandersen.type.Type
 import dk.maxkandersen.type.TypeVar
 import dk.maxkandersen.unification.constraint.Constraint
 import dk.maxkandersen.unification.compose
@@ -14,5 +15,15 @@ data class SndExp(val exp: Expression) : Expression {
         val s2 = Constraint(expRes.type, PairType(a, b)).unify()
         val s = expRes.substitution compose s2
         return s to b.substitute(s2)
+    }
+
+    override fun inferTypeUF(te: TypeEnvironment): Type {
+        val expType = exp.inferTypeUF(te)
+        val a = TypeVar()
+        val b = TypeVar()
+        val expectedPairType = PairType(a, b)
+        expType union expectedPairType
+        return b.baseType()
+
     }
 }

@@ -17,6 +17,12 @@ data class FunctionType(
         return FunctionType(from.substitute(substitution), to.substitute(substitution))
     }
 
+    //////// UNION-FIND ////////
+
+    override fun baseType(): Type {
+        return FunctionType(from.baseType(), to.baseType())
+    }
+
     //////// ROBINSON UNIFICATION ////////
 
     override fun toTermString(): String {

@@ -16,6 +16,12 @@ data class PairType(
         return PairType(left.substitute(substitution), right.substitute(substitution))
     }
 
+    //////// UNION-FIND ////////
+
+    override fun baseType(): Type {
+        return PairType(left.baseType(), right.baseType())
+    }
+
     //////// ROBINSON UNIFICATION ///////
 
     override fun toTermString(): String {

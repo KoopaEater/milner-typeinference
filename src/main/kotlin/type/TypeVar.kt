@@ -2,13 +2,18 @@ package dk.maxkandersen.type
 
 import dk.maxkandersen.unification.robinson.DisagreementPath
 import dk.maxkandersen.unification.Substitution
+import dk.maxkandersen.unification.unionfind.InvalidUnionException
 
-data class TypeVar(
+@ConsistentCopyVisibility
+data class TypeVar private constructor(
     val sym: String
 ) : Type {
-    constructor() : this("'${fresh()}")
 
     companion object {
+        private val cache = mutableMapOf<String, TypeVar>()
+        operator fun invoke(sym: String) = cache.getOrPut(sym) { TypeVar(sym) }
+        operator fun invoke() = invoke("'${fresh()}")
+
         private var counter = 0
         private fun fresh(): String {
             val sym = "t$counter"
@@ -17,6 +22,10 @@ data class TypeVar(
         }
         fun reset() {
             counter = 0
+            cache.clear()
+            for (typeVar in cache.values) {
+                typeVar.ufParent = null
+            }
         }
     }
 
@@ -25,7 +34,7 @@ data class TypeVar(
     }
 
     override fun substitute(substitution: Substitution): Type {
-        return substitution[this] ?: return this
+        return substitution[this] ?: this
     }
 
     override fun freeVars(): Set<TypeVar> {
@@ -34,6 +43,15 @@ data class TypeVar(
 
     override fun includes(typeVar: TypeVar): Boolean {
         return this == typeVar
+    }
+
+    //////// UNION-FIND ////////
+
+    var ufParent: Type? = null
+
+    override fun baseType(): Type {
+        ufParent = ufParent?.baseType() // Path compression
+        return ufParent ?: this
     }
 
     //////// ROBINSON UNIFICATION ////////

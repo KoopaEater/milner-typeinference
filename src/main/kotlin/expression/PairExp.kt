@@ -3,6 +3,7 @@ package dk.maxkandersen.expression
 import dk.maxkandersen.environment.TypeEnvironment
 import dk.maxkandersen.environment.substitute
 import dk.maxkandersen.type.PairType
+import dk.maxkandersen.type.Type
 import dk.maxkandersen.unification.compose
 
 data class PairExp(val left: Expression, val right: Expression) : Expression {
@@ -12,5 +13,11 @@ data class PairExp(val left: Expression, val right: Expression) : Expression {
         val s = leftRes.substitution compose rightRes.substitution
         val leftType = leftRes.type.substitute(rightRes.substitution)
         return s to PairType(leftType, rightRes.type)
+    }
+
+    override fun inferTypeUF(te: TypeEnvironment): Type {
+        val leftType = left.inferTypeUF(te)
+        val rightType = right.inferTypeUF(te)
+        return PairType(leftType, rightType).baseType()
     }
 }

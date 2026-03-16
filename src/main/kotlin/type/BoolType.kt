@@ -1,6 +1,7 @@
 package dk.maxkandersen.type
 
 import dk.maxkandersen.unification.robinson.DisagreementPath
+import dk.maxkandersen.unification.unionfind.InvalidUnionException
 
 object BoolType : ConstantType {
     override fun toString(): String {

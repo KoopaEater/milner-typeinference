@@ -2,10 +2,15 @@ package dk.maxkandersen.expression
 
 import dk.maxkandersen.environment.TypeEnvironment
 import dk.maxkandersen.type.BoolType
+import dk.maxkandersen.type.Type
 import dk.maxkandersen.unification.emptySubstitution
 
 data class BoolExp(val value: Boolean) : Expression {
     override fun inferTypeW(te: TypeEnvironment): InferWResult {
         return emptySubstitution() to BoolType
+    }
+
+    override fun inferTypeUF(te: TypeEnvironment): Type {
+        return BoolType
     }
 }
