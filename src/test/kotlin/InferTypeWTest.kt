@@ -23,7 +23,7 @@ import dk.maxkandersen.unification.constraint.ConstraintUnificationException
 import dk.maxkandersen.unification.emptySubstitution
 import kotlin.test.*
 
-class ExpressionTest {
+class InferTypeWTest {
 
     @BeforeTest
     fun setup() {
@@ -229,4 +229,13 @@ class ExpressionTest {
         assertEquals(expectedPair, res.type)
     }
 
+    // let f = λx.x in (f 5, f true) : (Int, Bool)
+    @Test
+    fun example7InfersCorrectly() {
+        val te = emptyTypeEnvironment()
+        val exp = LetExp("f", LambdaExp("x", VarExp("x")), PairExp(ApplicationExp(VarExp("f"), IntExp(5)), ApplicationExp(VarExp("f"), BoolExp(true))))
+        val res = exp.inferTypeW(te)
+        val expectedPair = PairType(IntType, BoolType)
+        assertEquals(expectedPair, res.type)
+    }
 }
