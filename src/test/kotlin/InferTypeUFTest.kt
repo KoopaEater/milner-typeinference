@@ -16,7 +16,7 @@ import dk.maxkandersen.type.IntType
 import dk.maxkandersen.type.PairType
 import dk.maxkandersen.type.QuantifyingTypeScheme
 import dk.maxkandersen.type.TypeVar
-import dk.maxkandersen.unification.unionfind.InvalidUnionException
+import dk.maxkandersen.type.exceptions.InvalidUFUnionException
 import kotlin.test.*
 
 class InferTypeUFTest {
@@ -205,7 +205,7 @@ class InferTypeUFTest {
     fun example5Fails() {
         val te = emptyTypeEnvironment()
         val exp = LambdaExp("f", PairExp(ApplicationExp(VarExp("f"), IntExp(5)), ApplicationExp(VarExp("f"), BoolExp(true))))
-        assertFailsWith<InvalidUnionException> { exp.inferTypeUF(te) }
+        assertFailsWith<InvalidUFUnionException> { exp.inferTypeUF(te) }
     }
 
     // let f = λx.e in (f 5, f true) : (t, t)

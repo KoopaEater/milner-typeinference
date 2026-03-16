@@ -1,5 +1,4 @@
-import dk.maxkandersen.unification.constraint.Constraint
-import dk.maxkandersen.unification.constraint.ConstraintUnificationException
+import dk.maxkandersen.type.exceptions.InvalidWUnificationException
 import dk.maxkandersen.unification.substitutionOf
 import dk.maxkandersen.type.FunctionType
 import dk.maxkandersen.type.IntType
@@ -7,7 +6,7 @@ import dk.maxkandersen.type.PairType
 import dk.maxkandersen.type.TypeVar
 import kotlin.test.*
 
-class ConstraintTest {
+class WUnificationTest {
 
     val a = TypeVar("a")
     val b = TypeVar("b")
@@ -23,26 +22,6 @@ class ConstraintTest {
     @BeforeTest
     fun setup() {
         TypeVar.reset()
-    }
-
-    @Test
-    fun constraintHasCorrectString() {
-        val constraint = Constraint(c, funab)
-        assertEquals("c = a -> b", constraint.toString())
-    }
-
-    @Test
-    fun equalConstraintsAreEqual() {
-        val constraint1 = Constraint(c, funab)
-        val constraint2 = Constraint(c, funab)
-        assertEquals(constraint1, constraint2)
-    }
-
-    @Test
-    fun unequalConstraintsAreNotEqual() {
-        val constraint1 = Constraint(c, funab)
-        val constraint2 = Constraint(a,b)
-        assertNotEquals(constraint1, constraint2)
     }
 
     @Test
@@ -76,30 +55,30 @@ class ConstraintTest {
 
     @Test
     fun equalTypesGiveEmptySubstitution() {
-        val s = Constraint(a, a).unify()
+        val s = a unify a
         assertTrue(s.isEmpty())
     }
 
     @Test
     fun typeVarsGiveCorrectSubstitution() {
-        val s = Constraint(a, b).unify()
+        val s = a unify b
         assertEquals(b, s[a])
         assertEquals(1, s.size)
     }
 
     @Test
     fun typeVarAndArbitraryGiveCorrectSubstitution() {
-        val s1 = Constraint(a, funcd).unify()
+        val s1 = a unify funcd
         assertEquals(funcd, s1[a])
         assertEquals(1, s1.size)
-        val s2 = Constraint(funcd, a).unify()
+        val s2 = funcd unify a
         assertEquals(funcd, s2[a])
         assertEquals(1, s2.size)
     }
 
     @Test
     fun functionTypesGiveCorrectSubstitution() {
-        val s = Constraint(funab, funcd).unify()
+        val s = funab unify funcd
         assertEquals(c, s[a])
         assertEquals(d, s[b])
         assertEquals(2, s.size)
@@ -107,14 +86,14 @@ class ConstraintTest {
 
     @Test
     fun functionTypesWithOverlapGivesCorrectSubstitution() {
-        val s = Constraint(funab, funba).unify()
+        val s = funab unify funba
         assertEquals(b, s[a])
         assertEquals(1, s.size)
     }
 
     @Test
     fun pairTypesGiveCorrectSubstitution() {
-        val s = Constraint(pairab, paircd).unify()
+        val s = pairab unify paircd
         assertEquals(c, s[a])
         assertEquals(d, s[b])
         assertEquals(2, s.size)
@@ -122,27 +101,22 @@ class ConstraintTest {
 
     @Test
     fun pairTypesWithOverlapGivesCorrectSubstitution() {
-        val s = Constraint(pairab, pairba).unify()
+        val s = pairab unify pairba
         assertEquals(b, s[a])
         assertEquals(1, s.size)
     }
 
     @Test
     fun unificationWithTypeVarInArbitraryFail() {
-        val constraint1 = Constraint(a, funab)
-        val constraint2 = Constraint(a, pairab)
-        assertFailsWith<ConstraintUnificationException> { constraint1.unify() }
-        assertFailsWith<ConstraintUnificationException> { constraint2.unify() }
+        assertFailsWith<InvalidWUnificationException> { a unify funab }
+        assertFailsWith<InvalidWUnificationException> { a unify pairab }
     }
 
     @Test
     fun unificationOfIncompatibleTypesFail() {
-        val constraint1 = Constraint(funab, IntType)
-        val constraint2 = Constraint(IntType, pairab)
-        val constraint3 = Constraint(funab, pairab)
-        assertFailsWith<ConstraintUnificationException> { constraint1.unify() }
-        assertFailsWith<ConstraintUnificationException> { constraint2.unify() }
-        assertFailsWith<ConstraintUnificationException> { constraint3.unify() }
+        assertFailsWith<InvalidWUnificationException> { funab unify IntType }
+        assertFailsWith<InvalidWUnificationException> { IntType unify pairab }
+        assertFailsWith<InvalidWUnificationException> { funab unify pairab}
     }
 
 }

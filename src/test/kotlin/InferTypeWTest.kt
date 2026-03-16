@@ -19,7 +19,7 @@ import dk.maxkandersen.type.IntType
 import dk.maxkandersen.type.PairType
 import dk.maxkandersen.type.QuantifyingTypeScheme
 import dk.maxkandersen.type.TypeVar
-import dk.maxkandersen.unification.constraint.ConstraintUnificationException
+import dk.maxkandersen.type.exceptions.InvalidWUnificationException
 import dk.maxkandersen.unification.emptySubstitution
 import kotlin.test.*
 
@@ -215,7 +215,7 @@ class InferTypeWTest {
     fun example5Fails() {
         val te = emptyTypeEnvironment()
         val exp = LambdaExp("f", PairExp(ApplicationExp(VarExp("f"), IntExp(5)), ApplicationExp(VarExp("f"), BoolExp(true))))
-        assertFailsWith<ConstraintUnificationException> { exp.inferTypeW(te) }
+        assertFailsWith<InvalidWUnificationException> { exp.inferTypeW(te) }
     }
 
     // let f = λx.e in (f 5, f true) : (t, t)

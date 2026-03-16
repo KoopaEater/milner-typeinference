@@ -1,5 +1,6 @@
 package dk.maxkandersen.type
 
+import dk.maxkandersen.type.exceptions.InvalidAlphaConversionException
 import dk.maxkandersen.unification.Substitution
 import dk.maxkandersen.unification.region
 import dk.maxkandersen.unification.substitutionOf

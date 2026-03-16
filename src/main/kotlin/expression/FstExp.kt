@@ -4,7 +4,6 @@ import dk.maxkandersen.environment.TypeEnvironment
 import dk.maxkandersen.type.PairType
 import dk.maxkandersen.type.Type
 import dk.maxkandersen.type.TypeVar
-import dk.maxkandersen.unification.constraint.Constraint
 import dk.maxkandersen.unification.compose
 
 data class FstExp(val exp: Expression) : Expression {
@@ -12,7 +11,7 @@ data class FstExp(val exp: Expression) : Expression {
         val expRes = exp.inferTypeW(te)
         val a = TypeVar()
         val b = TypeVar()
-        val s2 = Constraint(expRes.type, PairType(a, b)).unify()
+        val s2 = expRes.type unify PairType(a, b)
         val s = expRes.substitution compose s2
         return s to a.substitute(s2)
     }

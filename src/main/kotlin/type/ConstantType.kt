@@ -1,7 +1,6 @@
 package dk.maxkandersen.type
 
 import dk.maxkandersen.unification.Substitution
-import dk.maxkandersen.unification.unionfind.InvalidUnionException
 
 interface ConstantType : Type {
     override fun substitute(substitution: Substitution): Type {

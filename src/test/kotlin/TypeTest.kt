@@ -1,7 +1,7 @@
 import dk.maxkandersen.type.BoolType
 import dk.maxkandersen.type.FunctionType
 import dk.maxkandersen.type.IntType
-import dk.maxkandersen.type.InvalidAlphaConversionException
+import dk.maxkandersen.type.exceptions.InvalidAlphaConversionException
 import dk.maxkandersen.type.PairType
 import dk.maxkandersen.type.QuantifyingTypeScheme
 import dk.maxkandersen.type.TypeVar

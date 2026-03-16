@@ -2,7 +2,10 @@ package dk.maxkandersen.type
 
 import dk.maxkandersen.unification.robinson.DisagreementPath
 import dk.maxkandersen.unification.Substitution
-import dk.maxkandersen.unification.unionfind.InvalidUnionException
+import dk.maxkandersen.type.exceptions.InvalidWUnificationException
+import dk.maxkandersen.unification.emptySubstitution
+import dk.maxkandersen.unification.substitutionOf
+import dk.maxkandersen.type.exceptions.InvalidUFUnionException
 
 interface Type : TypeScheme, Comparable<Type> {
     override val quantifiers: List<TypeVar>
@@ -15,7 +18,29 @@ interface Type : TypeScheme, Comparable<Type> {
     override fun substitute(substitution: Substitution): Type
     fun includes(typeVar: TypeVar): Boolean
 
+    //////// W ////////
+
+    infix fun unify(other: Type): Substitution {
+        return when {
+            this == other -> emptySubstitution()
+            this is TypeVar && !(other.includes(this)) -> substitutionOf(this to other)
+            other is TypeVar && !(this.includes(other)) -> substitutionOf(other to this)
+            this is FunctionType && other is FunctionType -> {
+                val s1 = this.from unify other.from
+                val s2 = this.to.substitute(s1) unify other.to.substitute(s1)
+                return s1 + s2
+            }
+            this is PairType && other is PairType -> {
+                val s1 = this.left unify other.left
+                val s2 = this.right.substitute(s1) unify other.right.substitute(s1)
+                return s1 + s2
+            }
+            else -> throw InvalidWUnificationException(this, other)
+        }
+    }
+
     //////// UNION-FIND ////////
+
     fun baseType(): Type
     infix fun union(other: Type) {
         val left = baseType()
@@ -32,7 +57,7 @@ interface Type : TypeScheme, Comparable<Type> {
                 left.left union right.left
                 left.right union right.right
             }
-            else -> throw InvalidUnionException(this, other)
+            else -> throw InvalidUFUnionException(this, other)
         }
     }
 

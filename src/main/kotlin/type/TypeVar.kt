@@ -2,7 +2,6 @@ package dk.maxkandersen.type
 
 import dk.maxkandersen.unification.robinson.DisagreementPath
 import dk.maxkandersen.unification.Substitution
-import dk.maxkandersen.unification.unionfind.InvalidUnionException
 
 @ConsistentCopyVisibility
 data class TypeVar private constructor(

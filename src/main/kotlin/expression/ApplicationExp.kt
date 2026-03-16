@@ -5,7 +5,6 @@ import dk.maxkandersen.environment.substitute
 import dk.maxkandersen.type.FunctionType
 import dk.maxkandersen.type.Type
 import dk.maxkandersen.type.TypeVar
-import dk.maxkandersen.unification.constraint.Constraint
 import dk.maxkandersen.unification.compose
 
 data class ApplicationExp(val funExp: Expression, val paramExp: Expression) : Expression {
@@ -14,7 +13,7 @@ data class ApplicationExp(val funExp: Expression, val paramExp: Expression) : Ex
         val paramRes = paramExp.inferTypeW(te.substitute(funRes.substitution))
         val a = TypeVar()
         val funType = FunctionType(paramRes.type, a)
-        val s3 = Constraint(funRes.type.substitute(paramRes.substitution), funType).unify()
+        val s3 = funRes.type.substitute(paramRes.substitution) unify funType
         val s = funRes.substitution compose paramRes.substitution compose s3
         return s to a.substitute(s3)
     }
