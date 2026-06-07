@@ -6,6 +6,7 @@ import dk.maxkandersen.type.exceptions.InvalidWUnificationException
 import dk.maxkandersen.unification.emptySubstitution
 import dk.maxkandersen.unification.substitutionOf
 import dk.maxkandersen.type.exceptions.InvalidUFUnionException
+import dk.maxkandersen.unification.compose
 
 interface Type : TypeScheme, Comparable<Type> {
     override val quantifiers: List<TypeVar>
@@ -28,12 +29,12 @@ interface Type : TypeScheme, Comparable<Type> {
             this is FunctionType && other is FunctionType -> {
                 val s1 = this.from unify other.from
                 val s2 = this.to.substitute(s1) unify other.to.substitute(s1)
-                return s1 + s2
+                return s1 compose s2
             }
             this is PairType && other is PairType -> {
                 val s1 = this.left unify other.left
                 val s2 = this.right.substitute(s1) unify other.right.substitute(s1)
-                return s1 + s2
+                return s1 compose s2
             }
             else -> throw InvalidWUnificationException(this, other)
         }
